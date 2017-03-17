@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     ../../src/oauth/twoleggedapi.cpp \
     ../../src/oss/bucket.cpp \
     ../../src/shared/baseapi.cpp \
-    ../../src/shared/httprequest.cpp
+    ../../src/shared/httprequest.cpp \
+    ../../src/oss/bucketobject.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -35,7 +36,8 @@ HEADERS += \
     ../../src/oauth/twoleggedapi.h \
     ../../src/oss/bucket.h \
     ../../src/oss/bucketapi.h \
-    ../../src/shared/httprequest.h
+    ../../src/shared/httprequest.h \
+    ../../src/oss/bucketobject.h
 
 DISTFILES += \
     ../../src/oauth/README.md

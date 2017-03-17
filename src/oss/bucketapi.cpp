@@ -27,6 +27,11 @@ void BucketApi::addTokenRequester(TwoLeggedApi* token_requester)
 
 
 /*
+*	================= BUCKET MANIPULATION PART ===========================
+*/
+
+
+/*
  *	CREATEBUCKET
  */
 void BucketApi::createBucket(QString bucket_key, POLICY policy, REGION region)
@@ -77,6 +82,13 @@ void BucketApi::createBucketCallback(HttpRequestWorker* worker)
 /*
  *	GETBUCKETDETAILS
  */
+
+
+void BucketApi::getBucketDetails(Bucket bucket)
+{
+	getBucketDetails(bucket.get_bucket_key());
+}
+
 void BucketApi::getBucketDetails(QString bucket_key)
 {
 	QString fullPath = m_host + m_endpoint + "/" + bucket_key + "/details";
@@ -236,4 +248,97 @@ Bucket BucketApi::readBucketFromJson(QString input)
 	}
 
 	return output;
+}
+
+
+
+/*
+ *	================= OBJECT MANIPULATION PART ===========================
+ */
+
+
+
+
+/*
+ *	List Objects
+ */
+
+
+void BucketApi::listObjectsInBucket(Bucket bucket, qint32 limit)
+{
+	listObjectsInBucket(bucket.get_bucket_key());
+}
+
+void BucketApi::listObjectsInBucket(QString bucket_key, qint32 limit)
+{
+	QString fullPath = m_host + m_endpoint + "/" + bucket_key + "/objects";
+
+	fullPath.append("?");
+	fullPath.append(QUrl::toPercentEncoding("limit"))
+		.append("=")
+		.append(QUrl::toPercentEncoding(QString::number(limit)));
+
+
+	HttpRequestWorker *worker = new HttpRequestWorker();
+	QString token_scope = setScopes(DATA::READ);
+
+	connect(worker, &HttpRequestWorker::on_execution_finished, this, &BucketApi::listObjectsCallback);
+	connect(m_token_requester, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
+	{
+		if (bearer->get_scope() != token_scope) { return; }
+		HttpRequestInput input(fullPath, "GET");
+		input.m_headers.insert("Authorization", "Bearer " + bearer->get_access_token());
+		input.m_headers.insert("Content-Type", "application/json");
+		worker->execute(&input);
+		//		bearer->deleteLater();
+	});
+
+	m_token_requester->getTokenWithScope(token_scope);
+
+}
+
+
+void BucketApi::listObjectsCallback(HttpRequestWorker* worker)
+{
+	QList<BucketObject> output = convertResponseToObjectList(worker->m_response);
+
+	emit listObjectsSignal(output, worker->m_error_string);
+	worker->deleteLater();
+}
+
+
+QList<BucketObject> BucketApi::convertResponseToObjectList(QString input)
+{
+
+	QList<BucketObject> output;
+	QJsonDocument data = QJsonDocument::fromJson(input.toUtf8());
+	QJsonObject json_object = data.object();
+
+	if (json_object.contains("items") != true)
+	{
+		return output;
+	}
+
+	QJsonArray bucket_array = json_object["items"].toArray();
+	foreach(const QJsonValue &bucket_info, bucket_array)
+	{
+		QJsonObject bucket_object = bucket_info.toObject();
+		BucketObject item;
+		item.set_bucket_key(bucket_object["bucketKey"].toString());
+		item.set_object_key(bucket_object["objectKey"].toString());
+		item.set_object_id(bucket_object["objectId"].toString());
+		item.set_sha1(bucket_object["sha1"].toString());
+		item.set_size(static_cast<uint64_t>(bucket_object["size"].toDouble()));
+		item.set_location(bucket_object["location"].toString());
+
+		//TODO: check if the "next" reference is needed 
+		output.append(item);
+	}
+
+
+	return output;
+
+
+
+
 }

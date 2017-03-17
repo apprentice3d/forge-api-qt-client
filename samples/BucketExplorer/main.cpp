@@ -1,7 +1,10 @@
 #include <QCoreApplication>
 #include <QDebug>
+#include <QProcessEnvironment>
 #include "../../src/oss/bucketapi.h"
 
+QString FORGE_CLIENT_ID = "FORGE_CLIENT_ID";
+QString FORGE_CLIENT_SECRET = "FORGE_CLIENT_SECRET";
 
 int main(int argc, char *argv[])
 {
@@ -9,19 +12,23 @@ int main(int argc, char *argv[])
 
     qDebug() << "App started ...";
 
-	Forge::BucketApi bucketer;
-//	bucketer.set_host(QString("http://localhost:9001"));
-	Forge::TwoLeggedApi token_requester;
+	Forge::BucketApi bucket_manager;
+	Forge::TwoLeggedApi token_manager;
 
 
-	bucketer.addTokenRequester(&token_requester);
-	token_requester.set_client_id("F5M2IA7AAQadzLKpS4vEGmSNQYAFAg5T");
-	token_requester.set_client_secret("none");
+	auto envs = QProcessEnvironment::systemEnvironment();
+	auto key_list = envs.keys();
+
+	FORGE_CLIENT_ID = envs.contains(FORGE_CLIENT_ID) ? envs.value(FORGE_CLIENT_ID): FORGE_CLIENT_ID;
+	FORGE_CLIENT_SECRET = envs.contains(FORGE_CLIENT_SECRET) ? envs.value(FORGE_CLIENT_SECRET) : FORGE_CLIENT_SECRET;
+
+	
+	bucket_manager.addTokenRequester(&token_manager);
+	token_manager.set_client_id(FORGE_CLIENT_ID);
+	token_manager.set_client_secret(FORGE_CLIENT_SECRET);
 
 
-
-
-	QObject::connect(&bucketer, &Forge::BucketApi::getBucketsSignal, [&](QList<Forge::Bucket> result, QString error_string)
+	QObject::connect(&bucket_manager, &Forge::BucketApi::getBucketsSignal, [&](QList<Forge::Bucket> result, QString error_string)
 	{
 		if (!error_string.isEmpty())
 		{
@@ -45,12 +52,8 @@ int main(int argc, char *argv[])
 		
 	});
 
-	
 
-
-
-
-	QObject::connect(&bucketer, &Forge::BucketApi::getBucketDetailsSignal, [](Forge::Bucket bucket, QString error_string)
+	QObject::connect(&bucket_manager, &Forge::BucketApi::getBucketDetailsSignal, [](Forge::Bucket bucket, QString error_string)
 	{
 		if (!error_string.isEmpty())
 		{
@@ -76,9 +79,7 @@ int main(int argc, char *argv[])
 	});
 
 
-
-
-	QObject::connect(&bucketer, &Forge::BucketApi::createBucketSignal, [](Forge::Bucket bucket, QString error_string)
+	QObject::connect(&bucket_manager, &Forge::BucketApi::createBucketSignal, [](Forge::Bucket bucket, QString error_string)
 	{
 		if (!error_string.isEmpty())
 		{
@@ -103,7 +104,7 @@ int main(int argc, char *argv[])
 
 	});
 
-	QObject::connect(&token_requester, &Forge::TwoLeggedApi::authenticateSignal,
+	QObject::connect(&token_manager, &Forge::TwoLeggedApi::authenticateSignal,
 		[=](Forge::Bearer *result,QString error_string)
 	{
 		if (!error_string.isEmpty())
@@ -121,15 +122,49 @@ int main(int argc, char *argv[])
 		}
 	});
 
-	for(int i = 0 ; i < 1; ++i)
-	{
-		bucketer.getBuckets();
-		bucketer.getBucketDetails("f9755023-388c-4b29-814b-9a6760b6");
-		//	bucketer.createBucket();
-//		bucketer.getBuckets();
-//		token_requester.getTokenWithScope(Forge::setScopes(Forge::DATA::READ));
 
-	}
+	QObject::connect(&bucket_manager, &Forge::BucketApi::listObjectsSignal, [](QList<Forge::BucketObject> object_list, QString error_string)
+	{
+		if (!error_string.isEmpty())
+		{
+			qDebug() << "Could not list objects: " << error_string;
+		}
+		else
+		{
+			qDebug() << "Received object list: " << object_list.length() << " elements";
+			foreach(Forge::BucketObject object, object_list)
+			{
+
+				qDebug() << object.get_bucket_key()
+					<< " : "
+					<< object.get_object_key()
+					<< " : "
+					<< object.get_object_id()
+					<< " : "
+					<< object.get_sha1()
+					<< " : "
+					<< object.get_size()
+					<< " : "
+					<< object.get_location();
+
+			}
+		}
+		
+	});
+
+
+
+	bucket_manager.listObjectsInBucket("model2016-05-02-17-26-51-7wr53d9174tfiichybahdxalon24");
+	//		bucket_manager.getBuckets();
+	//		bucket_manager.getBucketDetails("f9755023-388c-4b29-814b-9a6760b6");
+	//		bucket_manager.createBucket();
+	//		token_requester.getTokenWithScope(Forge::setScopes(Forge::DATA::READ));
+
+//	for(int i = 0 ; i < 1; ++i)
+//	{
+//
+//
+//	}
 
 	
 
