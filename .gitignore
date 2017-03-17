@@ -257,3 +257,4 @@ CMakeLists.txt
 *.vcxproj
 samples/TwoLeggedTokenUtility/GeneratedFiles/
 samples/TwoLeggedTokenUtility/config.json
+*.sln
