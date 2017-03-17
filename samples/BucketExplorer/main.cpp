@@ -1,7 +1,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcessEnvironment>
-#include "../../src/oss/bucketapi.h"
+#include "bucketapi.h"
+#include "bucketobjectapi.h"
 
 QString FORGE_CLIENT_ID = "FORGE_CLIENT_ID";
 QString FORGE_CLIENT_SECRET = "FORGE_CLIENT_SECRET";
@@ -12,8 +13,10 @@ int main(int argc, char *argv[])
 
     qDebug() << "App started ...";
 
-	Forge::BucketApi bucket_manager;
 	Forge::TwoLeggedApi token_manager;
+	Forge::BucketApi bucket_manager;
+	Forge::BucketObjectApi object_manager;
+
 
 
 	auto envs = QProcessEnvironment::systemEnvironment();
@@ -22,11 +25,12 @@ int main(int argc, char *argv[])
 	FORGE_CLIENT_ID = envs.contains(FORGE_CLIENT_ID) ? envs.value(FORGE_CLIENT_ID): FORGE_CLIENT_ID;
 	FORGE_CLIENT_SECRET = envs.contains(FORGE_CLIENT_SECRET) ? envs.value(FORGE_CLIENT_SECRET) : FORGE_CLIENT_SECRET;
 
-	
-	bucket_manager.addTokenRequester(&token_manager);
+
 	token_manager.set_client_id(FORGE_CLIENT_ID);
 	token_manager.set_client_secret(FORGE_CLIENT_SECRET);
-
+	
+	bucket_manager.addTokenManager(&token_manager);
+	object_manager.addTokenManager(&token_manager);
 
 	QObject::connect(&bucket_manager, &Forge::BucketApi::getBucketsSignal, [&](QList<Forge::Bucket> result, QString error_string)
 	{
@@ -123,7 +127,7 @@ int main(int argc, char *argv[])
 	});
 
 
-	QObject::connect(&bucket_manager, &Forge::BucketApi::listObjectsSignal, [](QList<Forge::BucketObject> object_list, QString error_string)
+	QObject::connect(&object_manager, &Forge::BucketObjectApi::listObjectsSignal, [](QList<Forge::BucketObject> object_list, QString error_string)
 	{
 		if (!error_string.isEmpty())
 		{
@@ -154,7 +158,7 @@ int main(int argc, char *argv[])
 
 
 
-	bucket_manager.listObjectsInBucket("model2016-05-02-17-26-51-7wr53d9174tfiichybahdxalon24");
+	object_manager.listObjectsInBucket("model2016-05-02-17-26-51-7wr53d9174tfiichybahdxalon24");
 	//		bucket_manager.getBuckets();
 	//		bucket_manager.getBucketDetails("f9755023-388c-4b29-814b-9a6760b6");
 	//		bucket_manager.createBucket();
