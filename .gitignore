@@ -253,3 +253,7 @@ paket-files/
 samples/build-BucketExplorer-Qt_5_8_64bits-Debug/
 samples/TwoLeggedTokenUtility/mainwindow_bkp.ui
 CMakeLists.txt
+*.filters
+*.vcxproj
+samples/TwoLeggedTokenUtility/GeneratedFiles/
+samples/TwoLeggedTokenUtility/config.json
