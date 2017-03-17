@@ -49,6 +49,10 @@ script:
   - qmake -v
   - qmake -r samples/TwoLeggedTokenUtility/
   - make
+  - make clean
+  - qmake -r samples/BucketExplorer/
+  - make
+
 
 notifications:
   email: false
