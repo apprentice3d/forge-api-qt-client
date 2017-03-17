@@ -39,6 +39,9 @@ public:
 
 
 
+	void uploadObject(QString bucket_key, QString object_name, QString file_path, qint32 content_length, QString content_type = "application/octet-stream");
+
+
 //	void copyTo(QString* bucket_key, QString* object_name, QString* new_obj_name);
 //	void createSignedResource(QString* bucket_key, QString* object_name, SWGPost_buckets_signed post_buckets_signed, QString* access);
 //	void deleteObject(QString* bucket_key, QString* object_name);
@@ -57,6 +60,7 @@ public:
 
 signals:
 	void listObjectsSignal(QList<BucketObject> object_list, QString error_string);
+	void uploadObjectSignal(BucketObject object, QString error_string);
 
 
 
@@ -64,8 +68,10 @@ private:
 	TwoLeggedApi *m_token_manager;
 
 	void listObjectsCallback(HttpRequestWorker* worker);
+	void uploadObjectCallback(HttpRequestWorker* worker);
 	
 	//Auxiliary methods
 	static QList<BucketObject> convertResponseToObjectList(QString input);
+	static BucketObject readBucketObjectFromJson(QString input);
 };
 }

@@ -13,6 +13,8 @@ int main(int argc, char *argv[])
 
     qDebug() << "App started ...";
 
+//	QFile file("C:\Temp\test_scene.max");
+
 	Forge::TwoLeggedApi token_manager;
 	Forge::BucketApi bucket_manager;
 	Forge::BucketObjectApi object_manager;
@@ -139,6 +141,32 @@ int main(int argc, char *argv[])
 			foreach(Forge::BucketObject object, object_list)
 			{
 
+				qDebug() << "Bucket Key = " << object.get_bucket_key()
+					<< " : \n"
+					<< "Object key = " << object.get_object_key()
+					<< " : \n"
+					<< "Object id = " << object.get_object_id()
+					<< " : \n"
+					<< "SHA1 = " << object.get_sha1()
+					<< " : \n"
+					<< "size = " << object.get_size()
+					<< " : \n"
+					<< "location = " << object.get_location();
+
+			}
+		}
+		
+	});
+
+	QObject::connect(&object_manager, &Forge::BucketObjectApi::uploadObjectSignal, [](Forge::BucketObject object, QString error_string)
+	{
+		if (!error_string.isEmpty())
+		{
+			qDebug() << "Could not upload file: " << error_string;
+		}
+		else
+		{
+			
 				qDebug() << object.get_bucket_key()
 					<< " : "
 					<< object.get_object_key()
@@ -151,16 +179,17 @@ int main(int argc, char *argv[])
 					<< " : "
 					<< object.get_location();
 
-			}
 		}
-		
+
 	});
 
+//	object_manager.listObjectsInBucket("denix-temp-bucket");
+	object_manager.uploadObject("denix-temp-bucket","test.txt", "test.txt", 364, "text/plain");
 
 
-	object_manager.listObjectsInBucket("model2016-05-02-17-26-51-7wr53d9174tfiichybahdxalon24");
-	//		bucket_manager.getBuckets();
-	//		bucket_manager.getBucketDetails("f9755023-388c-4b29-814b-9a6760b6");
+
+//			bucket_manager.getBuckets();
+//			bucket_manager.getBucketDetails("denix-temp-bucket");
 	//		bucket_manager.createBucket();
 	//		token_requester.getTokenWithScope(Forge::setScopes(Forge::DATA::READ));
 

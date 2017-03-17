@@ -41,6 +41,7 @@ void BucketObjectApi::listObjectsInBucket(Bucket bucket, qint32 limit)
 	listObjectsInBucket(bucket.get_bucket_key(), limit);
 }
 
+
 void BucketObjectApi::listObjectsInBucket(QString bucket_key, qint32 limit)
 {
 	QString fullPath = m_host + m_endpoint + "/" + bucket_key + "/objects";
@@ -110,7 +111,65 @@ QList<BucketObject> BucketObjectApi::convertResponseToObjectList(QString input)
 
 	return output;
 
+}
+
+/*
+*	Upload Object
+*/
 
 
+void BucketObjectApi::uploadObject(QString bucket_key, QString object_name, QString file_path, qint32 content_length, QString content_type)
+{
 
+	QString fullPath = m_host + m_endpoint + "/" + bucket_key + "/objects/"+ object_name;
+
+	HttpRequestWorker *worker = new HttpRequestWorker();
+
+
+	//TODO: REVIEW the token scope - maybe split into 2 methods - to create and to update a file
+	QString token_scope = setScopes(DATA::WRITE);
+
+	connect(worker, &HttpRequestWorker::on_execution_finished, this, &BucketObjectApi::uploadObjectCallback);
+	connect(m_token_manager, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
+	{
+		if (bearer->get_scope() != token_scope) { return; }
+		HttpRequestInput input(fullPath, "PUT");
+		input.m_headers.insert("Authorization", "Bearer " + bearer->get_access_token());
+		input.m_headers.insert("Content-Type", content_type);
+
+		//TODO: check the request part and the last mime-type part
+		input.add_file(object_name, file_path, nullptr, content_type);
+
+		worker->execute(&input);
+//		bearer->deleteLater();
+	});
+
+	m_token_manager->getTokenWithScope(token_scope);
+}
+
+void BucketObjectApi::uploadObjectCallback(HttpRequestWorker* worker)
+{
+	BucketObject output = readBucketObjectFromJson(worker->m_response);
+
+	emit uploadObjectSignal(output, worker->m_error_string);
+	worker->deleteLater();
+}
+
+
+BucketObject BucketObjectApi::readBucketObjectFromJson(QString input)
+{
+	BucketObject output;
+
+	QJsonDocument doc = QJsonDocument::fromJson(input.toUtf8());
+	QJsonObject content = doc.object();
+
+	output.set_bucket_key(content.value("bucketKey").toString());
+	output.set_object_id(content.value("objectId").toString());
+	output.set_object_key(content.value("objectKey").toString());
+	output.set_sha1(content.value("sha1").toString());
+	output.set_size(static_cast<uint64_t>(content.value("size").toDouble()));
+	output.set_content_type(content.value("contentType").toString());
+	output.set_location(content.value("location").toString());
+
+	return output;
 }
