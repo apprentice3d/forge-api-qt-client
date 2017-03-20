@@ -16,11 +16,11 @@ BucketObject::BucketObject(QObject *parent)
 }
 
 
-BucketObject::BucketObject(const BucketObject&)
-{
-	//TODO: implement copy contructor to deal with
-	// block_sizes QVector
-}
+//BucketObject::BucketObject(const BucketObject&)
+//{
+//	//TODO: implement copy contructor to deal with
+//	// block_sizes QVector
+//}
 
 QString BucketObject::get_bucket_key() const
 {

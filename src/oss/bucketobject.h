@@ -13,7 +13,7 @@ public:
 	explicit BucketObject(QObject *parent = nullptr);
 	~BucketObject() = default;
 
-	BucketObject(const BucketObject &);
+//	BucketObject(const BucketObject &);
 
 	QString get_bucket_key() const;
 	void set_bucket_key(const QString& bucket_key);
