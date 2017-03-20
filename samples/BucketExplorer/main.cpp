@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcessEnvironment>
-#include "bucketapi.h"
-#include "bucketobjectapi.h"
+#include "../../src/oss/bucketapi.h"
+#include "../../src/oss/bucketobjectapi.h"
 
 QString FORGE_CLIENT_ID = "FORGE_CLIENT_ID";
 QString FORGE_CLIENT_SECRET = "FORGE_CLIENT_SECRET";
@@ -12,8 +12,6 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     qDebug() << "App started ...";
-
-//	QFile file("C:\Temp\test_scene.max");
 
 	Forge::TwoLeggedApi token_manager;
 	Forge::BucketApi bucket_manager;
