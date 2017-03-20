@@ -5,7 +5,7 @@ using namespace Forge;
 
 BucketApi::BucketApi(QObject *parent)
     : BaseApi(parent)
-	, m_token_requester(nullptr)
+	, m_token_manager(new TwoLeggedApi())
 {
 	m_endpoint = QString("/oss/v2/buckets");
 }
@@ -13,17 +13,22 @@ BucketApi::BucketApi(QObject *parent)
 
 BucketApi::~BucketApi()
 {
-	if (m_token_requester != nullptr) 
-	{ m_token_requester->deleteLater(); }
+	if (m_token_manager != nullptr)
+	{ m_token_manager->deleteLater(); }
 }
 
 
-void BucketApi::addTokenRequester(TwoLeggedApi* token_requester)
+void BucketApi::addTokenManager(TwoLeggedApi* token_requester)
 {
-	m_token_requester = token_requester;
-	if (m_token_requester->parent() == nullptr) 
-	{ m_token_requester->setParent(this); }
+	m_token_manager = token_requester;
+	if (m_token_manager->parent() == nullptr)
+	{ m_token_manager->setParent(this); }
 }
+
+
+/*
+*	================= BUCKET MANIPULATION PART ===========================
+*/
 
 
 /*
@@ -41,7 +46,7 @@ void BucketApi::createBucket(QString bucket_key, POLICY policy, REGION region)
 	QString token_scope = setScopes(BUCKET::CREATE);
 
 	connect(worker, &HttpRequestWorker::on_execution_finished, this, &BucketApi::createBucketCallback);
-	connect(m_token_requester, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
+	connect(m_token_manager, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
 	{
 		if (bearer->get_scope() != token_scope) { return; }
 		HttpRequestInput input(fullPath, "POST");
@@ -60,7 +65,7 @@ void BucketApi::createBucket(QString bucket_key, POLICY policy, REGION region)
 //		bearer->deleteLater();
 	});
 
-	m_token_requester->getTokenWithScope(token_scope);
+	m_token_manager->getTokenWithScope(token_scope);
 
 }
 
@@ -77,6 +82,13 @@ void BucketApi::createBucketCallback(HttpRequestWorker* worker)
 /*
  *	GETBUCKETDETAILS
  */
+
+
+void BucketApi::getBucketDetails(Bucket bucket)
+{
+	getBucketDetails(bucket.get_bucket_key());
+}
+
 void BucketApi::getBucketDetails(QString bucket_key)
 {
 	QString fullPath = m_host + m_endpoint + "/" + bucket_key + "/details";
@@ -86,7 +98,7 @@ void BucketApi::getBucketDetails(QString bucket_key)
 	QString token_scope = setScopes(BUCKET::READ);
 
 	connect(worker, &HttpRequestWorker::on_execution_finished, this, &BucketApi::getBucketDetailsCallback);
-	connect(m_token_requester, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
+	connect(m_token_manager, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
 	{
 		if (bearer->get_scope() != token_scope) { return; }
 		HttpRequestInput input(fullPath, "GET");
@@ -96,7 +108,7 @@ void BucketApi::getBucketDetails(QString bucket_key)
 //		bearer->deleteLater();
 	});
 
-	m_token_requester->getTokenWithScope(token_scope);
+	m_token_manager->getTokenWithScope(token_scope);
 }
 
 
@@ -151,7 +163,7 @@ void BucketApi::getBuckets(REGION region, qint32 limit, QString start_at)
 	connect(worker, &HttpRequestWorker::on_execution_finished, this, &BucketApi::getBucketsCallback);
 	
 	QString token_scope = setScopes(BUCKET::READ);
-	connect(m_token_requester, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
+	connect(m_token_manager, &TwoLeggedApi::authenticateSignal, [=](Bearer* bearer, QString error)
 	{
 		if (bearer->get_scope() != token_scope) { return; }
 		HttpRequestInput input(fullPath, "GET");
@@ -160,7 +172,7 @@ void BucketApi::getBuckets(REGION region, qint32 limit, QString start_at)
 //		bearer->deleteLater();
 	});
 	
-	m_token_requester->getTokenWithScope(token_scope);
+	m_token_manager->getTokenWithScope(token_scope);
 	
 }
 
@@ -237,3 +249,9 @@ Bucket BucketApi::readBucketFromJson(QString input)
 
 	return output;
 }
+
+
+
+
+
+

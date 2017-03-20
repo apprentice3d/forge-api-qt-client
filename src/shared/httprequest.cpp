@@ -160,10 +160,23 @@ void HttpRequestWorker::execute(HttpRequestInput* input)
 	else {
 		// variable layout is MULTIPART
 
+
+
+		//TODO: Check if the boundary and the delimiter is necessary
+		/*
 		boundary = "__-----------------------"
 			+ QString::number(QDateTime::currentDateTime().toTime_t())
 			+ QString::number(qrand());
 		QString boundary_delimiter = "--";
+		*/
+
+		boundary = "";
+		QString boundary_delimiter = "";
+
+
+		//End of above TODO
+
+
 		QString new_line = "\r\n";
 
 		// add variables
@@ -216,42 +229,52 @@ void HttpRequestWorker::execute(HttpRequestInput* input)
 				}
 			}
 
-			// add boundary
-			request_content.append(boundary_delimiter);
-			request_content.append(boundary);
-			request_content.append(new_line);
+//			// add boundary
+//			request_content.append(boundary_delimiter);
+//			request_content.append(boundary);
+//			request_content.append(new_line);
 
-			// add header
-			request_content.append(QString("Content-Disposition: form-data; %1; %2").arg(
-				http_attribute_encode("name", file_info->m_variable_name),
-				http_attribute_encode("filename", file_info->m_request_filename)
-			));
-			request_content.append(new_line);
+//			// add header
+//			request_content.append(QString("Content-Disposition: form-data; %1; %2").arg(
+//				http_attribute_encode("name", file_info->m_variable_name),
+//				http_attribute_encode("filename", file_info->m_request_filename)
+//			));
+//			request_content.append(new_line);
+//
+//			if (file_info->m_mime_type != nullptr && !file_info->m_mime_type.isEmpty()) {
+//				request_content.append("Content-Type: ");
+//				request_content.append(file_info->m_mime_type);
+//				request_content.append(new_line);
+//			}
 
-			if (file_info->m_mime_type != nullptr && !file_info->m_mime_type.isEmpty()) {
-				request_content.append("Content-Type: ");
-				request_content.append(file_info->m_mime_type);
-				request_content.append(new_line);
-			}
-
-			request_content.append("Content-Transfer-Encoding: binary");
-			request_content.append(new_line);
-
-			// add header to body splitter
-			request_content.append(new_line);
+//			request_content.append("Content-Transfer-Encoding: binary");
+//			request_content.append(new_line);
+//
+//			// add header to body splitter
+//			request_content.append(new_line);
 
 			// add file content
 			request_content.append(file.readAll());
-			request_content.append(new_line);
+//			request_content.append(new_line);
 
 			file.close();
 		}
-
-		// add end of body
-		request_content.append(boundary_delimiter);
-		request_content.append(boundary);
-		request_content.append(boundary_delimiter);
+//
+//		// add end of body
+//		request_content.append(boundary_delimiter);
+//		request_content.append(boundary);
+//		request_content.append(boundary_delimiter);
 	}
+
+
+
+
+
+
+
+
+
+
 
 	if (input->m_request_body.size() > 0) {
 		qDebug() << "got a request body";
@@ -268,6 +291,7 @@ void HttpRequestWorker::execute(HttpRequestInput* input)
 
 	if (request_content.size() > 0 && !isFormData) {
 		request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+//		request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
 	}
 	else if (input->m_var_layout == URL_ENCODED) {
 		request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
