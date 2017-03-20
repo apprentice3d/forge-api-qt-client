@@ -39,7 +39,8 @@ public:
 
 
 
-	void uploadObject(QString bucket_key, QString object_name, QString file_path, qint32 content_length, QString content_type = "application/octet-stream");
+	void uploadObject(QString bucket_key, QString object_name, QString file_path, QString if_match = "");
+	void downloadObject(QString bucket_key, QString object_name, QString file_name_path);
 
 
 //	void copyTo(QString* bucket_key, QString* object_name, QString* new_obj_name);
@@ -59,8 +60,9 @@ public:
 
 
 signals:
-	void listObjectsSignal(QList<BucketObject> object_list, QString error_string);
-	void uploadObjectSignal(BucketObject object, QString error_string);
+	void listObjectsSignal(QList<BucketObject*> object_list, QString error_string);
+	void uploadObjectSignal(BucketObject* object, QString error_string);
+	void downloadObjectSignal(QString filename_path, QString error_string);
 
 
 
@@ -69,9 +71,11 @@ private:
 
 	void listObjectsCallback(HttpRequestWorker* worker);
 	void uploadObjectCallback(HttpRequestWorker* worker);
+	void downloadObjectCallback(HttpRequestWorker* worker);
 	
 	//Auxiliary methods
-	static QList<BucketObject> convertResponseToObjectList(QString input);
-	static BucketObject readBucketObjectFromJson(QString input);
+	static QList<BucketObject*> convertResponseToObjectList(QString input);
+	static BucketObject* readBucketObjectFromJson(QString input);
+	static QString saveDownloadToDisk(QString& filename, QByteArray source);
 };
 }

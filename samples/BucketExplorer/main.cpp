@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 	});
 
 
-	QObject::connect(&object_manager, &Forge::BucketObjectApi::listObjectsSignal, [](QList<Forge::BucketObject> object_list, QString error_string)
+	QObject::connect(&object_manager, &Forge::BucketObjectApi::listObjectsSignal, [](QList<Forge::BucketObject*> object_list, QString error_string)
 	{
 		if (!error_string.isEmpty())
 		{
@@ -138,27 +138,27 @@ int main(int argc, char *argv[])
 		else
 		{
 			qDebug() << "Received object list: " << object_list.length() << " elements";
-			foreach(Forge::BucketObject object, object_list)
+			foreach(Forge::BucketObject* object, object_list)
 			{
 
-				qDebug() << "Bucket Key = " << object.get_bucket_key()
+				qDebug() << "Bucket Key = " << object->get_bucket_key()
 					<< " : \n"
-					<< "Object key = " << object.get_object_key()
+					<< "Object key = " << object->get_object_key()
 					<< " : \n"
-					<< "Object id = " << object.get_object_id()
+					<< "Object id = " << object->get_object_id()
 					<< " : \n"
-					<< "SHA1 = " << object.get_sha1()
+					<< "SHA1 = " << object->get_sha1()
 					<< " : \n"
-					<< "size = " << object.get_size()
+					<< "size = " << object->get_size()
 					<< " : \n"
-					<< "location = " << object.get_location();
+					<< "location = " << object->get_location();
 
 			}
 		}
 		
 	});
 
-	QObject::connect(&object_manager, &Forge::BucketObjectApi::uploadObjectSignal, [](Forge::BucketObject object, QString error_string)
+	QObject::connect(&object_manager, &Forge::BucketObjectApi::uploadObjectSignal, [](Forge::BucketObject* object, QString error_string)
 	{
 		if (!error_string.isEmpty())
 		{
@@ -167,30 +167,53 @@ int main(int argc, char *argv[])
 		else
 		{
 			
-				qDebug() << object.get_bucket_key()
+				qDebug() << object->get_bucket_key()
 					<< " : "
-					<< object.get_object_key()
+					<< object->get_object_key()
 					<< " : "
-					<< object.get_object_id()
+					<< object->get_object_id()
 					<< " : "
-					<< object.get_sha1()
+					<< object->get_sha1()
 					<< " : "
-					<< object.get_size()
+					<< object->get_size()
 					<< " : "
-					<< object.get_location();
+					<< object->get_location();
 
 		}
 
 	});
 
-//	object_manager.listObjectsInBucket("denix-temp-bucket");
-	object_manager.uploadObject("denix-temp-bucket","test.txt", "test.txt", 364, "text/plain");
 
+
+
+	QObject::connect(&object_manager, &Forge::BucketObjectApi::downloadObjectSignal, [](QString filename_path, QString error_string)
+	{
+		if (!error_string.isEmpty())
+		{
+			qDebug() << "Could not download file: " << error_string;
+		}
+		else
+		{
+
+			qDebug() << "The needed file can be found at: " << filename_path;
+
+		}
+
+	});
+
+
+
+
+
+//	object_manager.listObjectsInBucket("denix-temp-bucket");
+
+//	object_manager.uploadObject("denix-temp-bucket","TestMaxSceneFile", QFileInfo("C:\\Temp\\test_scene.max").absoluteFilePath());
+	object_manager.downloadObject("denix-temp-bucket", "TestMaxSceneFile", "C:\\Temp\\ForDenix.max");
 
 
 //			bucket_manager.getBuckets();
 //			bucket_manager.getBucketDetails("denix-temp-bucket");
-	//		bucket_manager.createBucket();
+//			bucket_manager.createBucket();
 	//		token_requester.getTokenWithScope(Forge::setScopes(Forge::DATA::READ));
 
 //	for(int i = 0 ; i < 1; ++i)
