@@ -52,6 +52,9 @@ script:
   - make clean
   - qmake -r samples/BucketExplorer/
   - make
+  - make clean
+  - qmake -r samples/ModelConverter/
+  - make
 
 
 notifications:
