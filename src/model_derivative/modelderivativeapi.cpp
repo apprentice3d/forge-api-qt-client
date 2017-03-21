@@ -99,32 +99,28 @@ void ModelDerivativeApi::updateFormatsFrom(QString source)
 	m_formats.last_time_updated = QDateTime::currentDateTime();
 	QHash<QString, QList<QString>> updated_formats;
 	QJsonDocument doc = QJsonDocument::fromJson(source.toUtf8());
-	QJsonObject content = doc.object();
+    QJsonObject formats = doc.object().value("formats").toObject();
 
+    QStringList format_keys = formats.keys();
+    foreach(const QString &key, format_keys)
+    {
+        QJsonArray model_types = formats.value(key).toArray();
+        foreach(const QJsonValue &t, model_types)
+        {
+            QString t_object = t.toString();
+            if (updated_formats.contains(t_object))
+            {
+                updated_formats[t_object].append(key);
+            }
+            else
+            {
+                QList<QString> convertible_to;
+                convertible_to.append(key);
+                updated_formats.insert(t_object, convertible_to);
+            }
 
-	QJsonArray formats = content.value("formats").toArray();
-		foreach(const QJsonValue &record, formats)
-		{
-			QJsonObject format = record.toObject();
-			QStringList keys = format.keys();
-			foreach(const QString &key, keys)
-			{
-				QJsonArray model_types = format.value(key).toArray();
-				foreach(const QJsonValue &t, model_types)
-				{
-					QString t_object = t.toString();
-					qDebug() << t_object;
-				}
-			}
-		}
-
-//	output->set_bucket_key(content.value("bucketKey").toString());
-//	output->set_object_id(content.value("objectId").toString());
-//	output->set_object_key(content.value("objectKey").toString());
-//	output->set_sha1(content.value("sha1").toString());
-//	output->set_size(static_cast<uint64_t>(content.value("size").toDouble()));
-//	output->set_content_type(content.value("contentType").toString());
-//	output->set_location(content.value("location").toString());
+        }
+    }
 
 		m_formats.supported_formats = updated_formats;
 }
