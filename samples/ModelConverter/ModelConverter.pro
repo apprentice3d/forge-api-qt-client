@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     ../../src/oss/bucketobject.cpp \
     ../../src/oss/bucketobjectapi.cpp \
     ../../src/shared/baseapi.cpp \
-    ../../src/shared/httprequest.cpp
+    ../../src/shared/httprequest.cpp \
+    ../../src/model_derivative/modelderivativeapi.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -38,4 +39,5 @@ HEADERS += \
     ../../src/oss/bucketobject.h \
     ../../src/oss/bucketobjectapi.h \
     ../../src/shared/baseapi.h \
-    ../../src/shared/httprequest.h
+    ../../src/shared/httprequest.h \
+    ../../src/model_derivative/modelderivativeapi.h
