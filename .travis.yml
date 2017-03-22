@@ -56,7 +56,7 @@ script:
   - qmake -r samples/ModelConverter/
   - make
   - make clean
-  - qmake -r tests\md_tests\ModelDerivativeTestSuite
+  - qmake -r tests/md_tests/ModelDerivativeTestSuite
   - make
 
 
