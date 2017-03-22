@@ -42,7 +42,7 @@ SupportedFormats ModelDerivativeApi::get_cached_formats() const
 void ModelDerivativeApi::getFormats(QString for_source)
 {
 	if(!m_formats.supported_formats.isEmpty() 
-		&& QDateTime::currentMSecsSinceEpoch() - this->m_formats.last_time_updated.toSecsSinceEpoch() < refresh_period_in_secs)
+        && QDateTime::currentMSecsSinceEpoch() - this->m_formats.last_time_updated.toTime_t() < refresh_period_in_secs)
 	{
 		SupportedFormats *result = for_source.isEmpty() ? &m_formats : filterFormatsForSource(for_source);
 		emit getFormatsSignal(result, nullptr);
