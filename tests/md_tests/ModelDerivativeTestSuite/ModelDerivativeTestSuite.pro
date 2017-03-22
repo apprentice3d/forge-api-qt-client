@@ -31,7 +31,8 @@ SOURCES += tst_modelderivativetestsuitetest.cpp \
     ../../../src/shared/baseapi.cpp \
     ../../../src/shared/httprequest.cpp \
     ../../../src/oauth/bearer.cpp \
-    ../../../src/oauth/twoleggedapi.cpp
+    ../../../src/oauth/twoleggedapi.cpp \
+    ../../../src/model_derivative/jobpayload.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -39,4 +40,5 @@ HEADERS += \
     ../../../src/shared/baseapi.h \
     ../../../src/shared/httprequest.h \
     ../../../src/oauth/bearer.h \
-    ../../../src/oauth/twoleggedapi.h
+    ../../../src/oauth/twoleggedapi.h \
+    ../../../src/model_derivative/jobpayload.h

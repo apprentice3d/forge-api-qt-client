@@ -5,11 +5,13 @@
 #include <QJsonArray>
 #include "../shared/baseapi.h"
 #include "../oauth/twoleggedapi.h"
+#include "jobpayload.h"
 
 
 namespace Forge{
 
 	static int refresh_period_in_secs = 360;
+
 
 
 
@@ -33,10 +35,12 @@ public:
 	void addTokenManager(TwoLeggedApi* token_requester);
 
 	void getFormats(QString for_source = "");
-	void updateFormatsFrom(QString source);
+
+	void translate(JobPayload job, bool x_ads_force);
 
 
 	SupportedFormats get_cached_formats() const;
+    void updateFormatsFrom(QString source);
 signals:
 	void getFormatsSignal(SupportedFormats* formats, QString error_string);
 
@@ -47,8 +51,8 @@ private:
 	TwoLeggedApi* m_token_manager;
 
 
-	//	void getFormatsCallback(HttpRequestWorker* worker);
 	//Auxiliary
+
 	SupportedFormats* filterFormatsForSource(QString source);
 
 

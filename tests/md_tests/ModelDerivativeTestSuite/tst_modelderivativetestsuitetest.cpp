@@ -2,6 +2,7 @@
 #include <QtTest>
 #include <QDebug>
 #include "../../../src/model_derivative/modelderivativeapi.h"
+#include "../../../src/model_derivative/jobpayload.h"
 
 class ModelDerivativeTestSuiteTest : public QObject
 {
@@ -13,8 +14,18 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
+
     void testSupportedFormatsParsing_data();
     void testSupportedFormatsParsing();
+
+    void testFormationOfJsonBody_data();
+    void testFormationOfJsonBody();
+
+//    void testJobPayloadCreation_data();
+//    void testJobPayloadCreation();
+
+
+
 
 private:
     Forge::ModelDerivativeApi* md;
@@ -48,9 +59,59 @@ void ModelDerivativeTestSuiteTest::testSupportedFormatsParsing()
     md->updateFormatsFrom(data);
     QVERIFY2(md->get_cached_formats().supported_formats.isEmpty() != true, "The format list is empty");
     QVERIFY2(md->get_cached_formats().supported_formats.value("3ds").count() != 1, "The 3ds format is containing just 1 record");
-    qDebug() << "Formats for f3d: " << md->get_cached_formats().supported_formats.value("f3d");
 }
+
+
+
+void ModelDerivativeTestSuiteTest::testFormationOfJsonBody_data()
+{
+    QTest::addColumn<bool>("svf_option_3d");
+    QTest::addColumn<bool>("svf_option_2d");
+    QTest::addColumn<QString>("expected_string");
+    QTest::newRow("3d_only") << true << false << "{\"type\":\"svf\",\"views\":[\"3d\"]}";;
+    QTest::newRow("2d_only") << false << true << "{\"type\":\"svf\",\"views\":[\"2d\"]}";
+    QTest::newRow("3d_and_2d") << true << true << "{\"type\":\"svf\",\"views\":[\"2d\",\"3d\"]}";
+}
+
+void ModelDerivativeTestSuiteTest::testFormationOfJsonBody()
+{
+    QFETCH(bool, svf_option_3d);
+    QFETCH(bool, svf_option_2d);
+    QFETCH(QString, expected_string);
+    Forge::SvfJobOutput data(svf_option_3d, svf_option_2d);
+    QJsonDocument content(data.getAttributes());
+
+    QCOMPARE(QString(content.toJson(QJsonDocument::Compact)), expected_string);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//void ModelDerivativeTestSuiteTest::testJobPayloadCreation_data()
+//{
+//    QTest::addColumn<Forge::JobPayload>("payloads");
+//    Forge::JobOutput
+//    Forge::JobPayload svf;
+
+//}
+
+//void ModelDerivativeTestSuiteTest::testJobPayloadCreation()
+//{
+//    QFETCH(Forge::JobPayload, data);
+//}
+
+
+
 
 QTEST_APPLESS_MAIN(ModelDerivativeTestSuiteTest)
 
 #include "tst_modelderivativetestsuitetest.moc"
+//#include "tst_modelderivativetranslationjobtests.moc"
