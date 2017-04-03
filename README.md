@@ -18,7 +18,7 @@ target="_blank">Design Automation</a>.
 -->
 ### Requirements
 
-* Qt 5.3 and above.
+* Qt 5.6 and above.
 * A registered app on the <a
   href="https://developer.autodesk.com/myapps" target="_blank">Forge
   Developer portal</a>.
@@ -34,4 +34,4 @@ Each part of this SDK is presented with a README with appropriate
  tutorial content:
 
  - [Token acquiring](src/oauth)
- - [bucket and object management](src/oss)
+ - [Bucket and object management](src/oss)

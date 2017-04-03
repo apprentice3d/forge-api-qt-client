@@ -240,8 +240,8 @@ bucket_manager.createBucket()
 In your terminal, you should get a result like this (containing your own data):
 ```
 Bucket Details:
-"ab1c03a5-d2d6-4592-ae1b-fabfce62"
-"F5M2IA7AAQadzLKpS4vEGmSNQYAFAg5T"
+"a3009198-d2d6-4592-ae1b-fabfce62"
+"F5M2GRIDAQadzLKpS4vEGmSNQYAFAg5T"
 "Mon Apr 3 11:35:01 2017"
 "transient"
 =====Permisions=====
@@ -323,7 +323,7 @@ Received object list:  1  element(s)
 Bucket Key =  "some-temp-bucket"  :
  Object key =  "TestMaxSceneFile"  :
  Object id =  "urn:adsk.objects:os.object:some-temp-bucket/TestMaxSceneFile"  :
- SHA1 =  "0ce58fa8d840f8d1002244bfb447777ae99c94c5"  :
+ SHA1 =  "0ce58fa8d3009198102244bfb447777ae99c94c5"  :
  size =  245760  :
  location =  "https://developer.api.autodesk.com/oss/v2/buckets/some-temp-bucket/objects/TestMaxSceneFile"
 ```
@@ -385,12 +385,12 @@ object_manager.uploadObject("some-temp-bucket",
 In your terminal, you should get a result like this (containing your own data):
 ```
 The given object was successfully uploaded:
-Bucket_key:  "denix-temp-bucket"
+Bucket_key:  "some-temp-bucket"
 Object_key:  "TestMaxSceneFile"
-Object_id:  "urn:adsk.objects:os.object:denix-temp-bucket/TestMaxSceneFile"
-SHA1:  "0ce58fa8d840f8d1002245bfb448779ae98c94c5"
+Object_id:  "urn:adsk.objects:os.object:some-temp-bucket/TestMaxSceneFile"
+SHA1:  "0ce58fa8d840f8d1002245bfb4430091981c94c5"
 Size:  245760
-Location:  "https://developer.api.autodesk.com/oss/v2/buckets/denix-temp-bucket/objects/TestMaxSceneFile"
+Location:  "https://developer.api.autodesk.com/oss/v2/buckets/some-temp-bucket/objects/TestMaxSceneFile"
 ```
 -------------------------
 
@@ -435,7 +435,7 @@ QObject::connect(&object_manager,
 ...
 
 // upload the object to the needed bucket
-object_manager.downloadObject("denix-temp-bucket", 
+object_manager.downloadObject("some-temp-bucket", 
                               "TestMaxSceneFile", 
                               "C:\\Temp\\ForExample.max");
 ...
