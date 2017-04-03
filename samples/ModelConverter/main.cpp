@@ -174,18 +174,13 @@ int main(int argc, char *argv[])
         else
         {
 
-                qDebug() << object->get_bucket_key()
-                    << " : "
-                    << object->get_object_key()
-                    << " : "
-                    << object->get_object_id()
-                    << " : "
-                    << object->get_sha1()
-                    << " : "
-                    << object->get_size()
-                    << " : "
-                    << object->get_location();
-
+            qDebug() << "The given object was successfully uploaded:" 
+        			 << "\nBucket_key: "	<< object->get_bucket_key()
+					 << "\nObject_key: "	<< object->get_object_key()
+					 << "\nObject_id: "		<< object->get_object_id()
+					 << "\nSHA1: "			<< object->get_sha1()
+					 << "\nSize: "			<< object->get_size()
+					 << "\nLocation: "		<< object->get_location();
         }
 
     });
@@ -202,7 +197,9 @@ int main(int argc, char *argv[])
         else
         {
 
-            qDebug() << "The needed file can be found at: " << filename_path;
+            qDebug() << "Download completed!\n"
+        			 << "The needed file can be found at: " 
+        			 << filename_path;
 
         }
 
@@ -215,7 +212,7 @@ int main(int argc, char *argv[])
 //	object_manager.listObjectsInBucket("denix-temp-bucket");
 
 //	object_manager.uploadObject("denix-temp-bucket","TestMaxSceneFile", QFileInfo("C:\\Temp\\test_scene.max").absoluteFilePath());
-//	object_manager.downloadObject("denix-temp-bucket", "TestMaxSceneFile", "C:\\Temp\\ForDenix.max");
+	object_manager.downloadObject("denix-temp-bucket", "TestMaxSceneFile", "C:\\Temp\\ForExample.max");
 
 
 //			bucket_manager.getBuckets();
@@ -282,7 +279,7 @@ int main(int argc, char *argv[])
 	});
 
 
-	md_manager.getFormats();
+//	md_manager.getFormats();
 
 
 
