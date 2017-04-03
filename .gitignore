@@ -264,3 +264,4 @@ samples/build-ModelConverter-Desktop_Qt_5_8_0_MinGW_32bit2-Debug/
 samples/build-ModelConverter-Desktop_Qt_5_7_1_MinGW_32bit-Debug/
 tests/md_tests/build-ModelDerivativeTestSuite-Desktop_Qt_5_8_0_MinGW_32bit2-Debug/
 *.autosave
+samples/build-BucketExplorer-Desktop_Qt_5_7_1_MSVC2015_64bit-Debug/

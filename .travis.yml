@@ -53,11 +53,12 @@ script:
   - qmake -r samples/BucketExplorer/
   - make
   - make clean
-  - qmake -r samples/ModelConverter/
-  - make
-  - make clean
+#  - qmake -r samples/ModelConverter/
+#  - make
+#  - make clean
   - qmake -r tests/md_tests/ModelDerivativeTestSuite
   - make
+  - make clean
 
 
 notifications:
