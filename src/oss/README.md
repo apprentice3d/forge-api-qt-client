@@ -333,7 +333,10 @@ Bucket Key =  "some-temp-bucket"  :
 #### <a name="upload_object"></a> Upload an object into a bucket
 ```cpp
 // call
-void BucketObjectApi::uploadObject(QString bucket_key, QString object_name, QString file_path, QString if_match = "");
+void BucketObjectApi::uploadObject(QString bucket_key, 
+                                   QString object_name, 
+                                   QString file_path, 
+                                   QString if_match = "");
 // and stay tuned for 
 void BucketObjectApi::uploadObjectSignal(BucketObject* object, QString error_string);
 ```
@@ -348,7 +351,10 @@ void BucketObjectApi::uploadObjectSignal(BucketObject* object, QString error_str
 // prepare to receive the upload results, 
 // by connecting to BucketObjectApi::uploadObjectSignal with suitable slot 
 // or a lambda function as in this example 
-QObject::connect(&object_manager, &Forge::BucketObjectApi::uploadObjectSignal, [](Forge::BucketObject* object, QString error_string)
+QObject::connect(&object_manager, 
+                 &Forge::BucketObjectApi::uploadObjectSignal, 
+                 [](Forge::BucketObject* object, 
+                    QString error_string)
 {
 	if (!error_string.isEmpty())
 	{
