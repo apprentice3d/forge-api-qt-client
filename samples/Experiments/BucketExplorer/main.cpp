@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QProcessEnvironment>
-#include "../../src/oss/bucketobjectapi.h"
-#include "../../src/oss/bucketapi.h"
+#include "../../../src/oss/bucketobjectapi.h"
+#include "../../../src/oss/bucketapi.h"
 
 QString FORGE_CLIENT_ID = "FORGE_CLIENT_ID";
 QString FORGE_CLIENT_SECRET = "FORGE_CLIENT_SECRET";
@@ -205,8 +205,8 @@ int main(int argc, char *argv[])
 
 //	object_manager.listObjectsInBucket("denix-temp-bucket");
 
-//	object_manager.uploadObject("denix-temp-bucket","TestMaxSceneFile", QFileInfo("C:\\Temp\\test_scene.max").absoluteFilePath());
-	object_manager.downloadObject("denix-temp-bucket", "TestMaxSceneFile", "C:\\Temp\\ForDenix.max");
+    object_manager.uploadObject("denix-temp-bucket","TestMaxSceneFile", QFileInfo("C:\\Temp\\test_scene.max").absoluteFilePath());
+//	object_manager.downloadObject("denix-temp-bucket", "TestMaxSceneFile", "C:\\Temp\\ForDenix.max");
 
 
 //			bucket_manager.getBuckets();

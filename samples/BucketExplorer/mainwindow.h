@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 #include <QStringListModel>
+#include <QStandardItemModel>
+#include <QDropEvent>
+#include <QMimeData>
+
 #include "../../src/oss/bucketapi.h"
 #include "../../src/oss/bucketobjectapi.h"
 
@@ -17,22 +21,27 @@ class MainWindow : public QMainWindow
 public:
 
 	
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-	void setupKeysAndAPIs();
 
 
 private slots:
 	void populateBucketView(QList<Forge::Bucket> result, QString error_string) const;
 	void selectionChanged(const QModelIndex& index) const;
+	void updateObjectTable(QList<Forge::BucketObject*> object_list, QString error_string) const;
+	void uploadDroppedFile(QDropEvent *event);
 
 private:
     Ui::MainWindow *ui;
-	Forge::BucketApi m_bucket_manager;
-	Forge::BucketObjectApi m_object_manager;
+	Forge::BucketApi* m_bucket_manager;
+	Forge::BucketObjectApi* m_object_manager;
 	QStringListModel* m_bucket_list;
+	QStandardItemModel* m_object_list;
+	QMap<QString, QList<QList<QStandardItem*>>> *m_cashed_objects;
+	
 
+	void setupKeysAndAPIs();
+	void setupObjectTable() const;
 	void writeStatusMessage(QString text_content, bool positive = true, qint16 millsec_timeout = 0) const;
 };
 

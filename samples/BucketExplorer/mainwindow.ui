@@ -37,7 +37,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QTableView" name="objectView"/>
+       <widget class="QTableView" name="objectView">
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+       </widget>
       </item>
      </layout>
     </item>

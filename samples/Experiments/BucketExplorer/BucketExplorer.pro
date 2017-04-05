@@ -10,14 +10,15 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    ../../src/oauth/bearer.cpp \
-    ../../src/oauth/twoleggedapi.cpp \
-    ../../src/oss/bucket.cpp \
-    ../../src/shared/baseapi.cpp \
-    ../../src/shared/httprequest.cpp \
-    ../../src/oss/bucketobject.cpp \
-    ../../src/oss/bucketobjectapi.cpp \
-    ../../src/oss/bucketapi.cpp
+    ../../../src/oauth/bearer.cpp \
+    ../../../src/oauth/twoleggedapi.cpp \
+    ../../../src/oss/bucket.cpp \
+    ../../../src/oss/bucketapi.cpp \
+    ../../../src/oss/bucketobject.cpp \
+    ../../../src/oss/bucketobjectapi.cpp \
+    ../../../src/shared/baseapi.cpp \
+    ../../../src/shared/httprequest.cpp
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -31,14 +32,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    ../../src/shared/baseapi.h \
-    ../../src/oauth/bearer.h \
-    ../../src/oauth/twoleggedapi.h \
-    ../../src/oss/bucket.h \
-    ../../src/shared/httprequest.h \
-    ../../src/oss/bucketobject.h \
-    ../../src/oss/bucketobjectapi.h \
-    ../../src/oss/bucketapi.h
+    ../../../src/oauth/bearer.h \
+    ../../../src/oauth/twoleggedapi.h \
+    ../../../src/oss/bucket.h \
+    ../../../src/oss/bucketapi.h \
+    ../../../src/oss/bucketobject.h \
+    ../../../src/oss/bucketobjectapi.h \
+    ../../../src/shared/baseapi.h \
+    ../../../src/shared/httprequest.h
+
 
 DISTFILES += \
     ../../src/oauth/README.md

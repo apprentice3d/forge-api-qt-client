@@ -60,6 +60,7 @@ public:
 
         objectView = new QTableView(centralWidget);
         objectView->setObjectName(QStringLiteral("objectView"));
+        objectView->horizontalHeader()->setStretchLastSection(true);
 
         horizontalLayout->addWidget(objectView);
 
