@@ -98,21 +98,19 @@ void MainWindow::selectionChanged(const QModelIndex& index) const
 	writeStatusMessage("Bucket \"" + selected_bucket + "\" has " 
 						+ QString::number(m_cashed_objects->value(selected_bucket).length()) 
 						+ " object(s)");
-	
-//	this->setupObjectTable();
 	m_object_list->setRowCount(0);
-	
 	auto object_list = m_cashed_objects->value(selected_bucket);
+
 	for (QList<QStandardItem*> item_description : object_list)
 	{
-//		if (!item_description.isEmpty())
+		QList<QStandardItem*> displayed_values;
+		for (QStandardItem* item : item_description)
 		{
-			int row_count = m_object_list->rowCount();
-            m_object_list->insertRow(row_count, item_description);
-//			m_object_list->appendRow(item_description);
+			displayed_values.append(item->clone());
 		}
-		
+		m_object_list->appendRow(displayed_values);
 	}
+
 }
 
 void MainWindow::updateObjectTable(QList<Forge::BucketObject*> object_list, QString error_string) const
@@ -124,8 +122,8 @@ void MainWindow::updateObjectTable(QList<Forge::BucketObject*> object_list, QStr
 	}
 	else
 	{
-
 		writeStatusMessage("Received object list with " + QString::number(object_list.length()) + " element(s)", true, 3000);
+
 		QList<QList<QStandardItem*>> items;
 		foreach(Forge::BucketObject* object, object_list)
 		{
@@ -134,23 +132,16 @@ void MainWindow::updateObjectTable(QList<Forge::BucketObject*> object_list, QStr
 							new QStandardItem(object->get_object_id()),
 							new QStandardItem(object->get_sha1()),
 							new QStandardItem(object->get_location()),
-
 			});
-
 		}
 		if (!object_list.isEmpty())
 		{
 			m_cashed_objects->insert(object_list.first()->get_bucket_key(), items);
 		}
-		
 	}
-
-
-
-
 }
 
-void MainWindow::uploadDroppedFile(QDropEvent* event)
+void MainWindow::uploadDroppedFile(QDropEvent* event) const
 {
 	if(event->mimeData()->hasUrls())
 	{

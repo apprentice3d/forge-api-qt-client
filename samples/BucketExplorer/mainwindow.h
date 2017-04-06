@@ -29,7 +29,7 @@ private slots:
 	void populateBucketView(QList<Forge::Bucket> result, QString error_string) const;
 	void selectionChanged(const QModelIndex& index) const;
 	void updateObjectTable(QList<Forge::BucketObject*> object_list, QString error_string) const;
-	void uploadDroppedFile(QDropEvent *event);
+	void uploadDroppedFile(QDropEvent *event) const;
 
 private:
     Ui::MainWindow *ui;
