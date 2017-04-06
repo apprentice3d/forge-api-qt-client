@@ -66,8 +66,8 @@ void MainWindow::setupKeysAndAPIs()
 void MainWindow::setupObjectTable() const
 {
 	m_object_list->clear();
-	m_object_list->setColumnCount(6);
-	m_object_list->setHorizontalHeaderLabels({ "Bucket Key", "Object Key", "Size", "Object ID", "SHA1", "Location" });
+    m_object_list->setColumnCount(5);
+    m_object_list->setHorizontalHeaderLabels({ "Object Key", "Size", "Object ID", "SHA1", "Location" });
 	ui->objectView->setModel(m_object_list);
 }
 
@@ -108,7 +108,7 @@ void MainWindow::selectionChanged(const QModelIndex& index) const
 //		if (!item_description.isEmpty())
 		{
 			int row_count = m_object_list->rowCount();
-			m_object_list->insertRow(m_object_list->rowCount(), item_description);
+            m_object_list->insertRow(row_count, item_description);
 //			m_object_list->appendRow(item_description);
 		}
 		
@@ -129,8 +129,7 @@ void MainWindow::updateObjectTable(QList<Forge::BucketObject*> object_list, QStr
 		QList<QList<QStandardItem*>> items;
 		foreach(Forge::BucketObject* object, object_list)
 		{
-			items.append({	new QStandardItem(object->get_bucket_key()),
-							new QStandardItem(object->get_object_key()),
+            items.append({	new QStandardItem(object->get_object_key()),
 							new QStandardItem(QString::number(object->get_size())),
 							new QStandardItem(object->get_object_id()),
 							new QStandardItem(object->get_sha1()),
