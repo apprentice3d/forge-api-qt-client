@@ -35,3 +35,4 @@ Each part of this SDK is presented with a README with appropriate
 
  - [Token acquiring](src/oauth)
  - [Bucket and object management](src/oss)
+ - [Model derivative](src/model_derivative)
